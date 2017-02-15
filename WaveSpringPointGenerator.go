@@ -24,23 +24,31 @@ var Degrees, Revolutions float64
 var Thinkness, Gap float64
 var Origin Vertex = Vertex{0, 0, 0}
 
+func input(i *float64) {
+	_, err := fmt.Scanf("%f", i)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func main() {
 	fmt.Println("-------------------------------------")
 	fmt.Println("| Wave Wire Spring Points Generator |")
 	fmt.Println("-------------------------------------")
 	fmt.Print("")
 	fmt.Print("Inner Diameter: ")
-	_, err := fmt.Scanf("%f", &InnerDiam)
+	input(&InnerDiam)
 	fmt.Print("Outer Diameter: ")
-	_, err := fmt.Scanf("%f", &OuterDiam)
+	input(&OuterDiam)
 	fmt.Print("Height: ")
-	_, err := fmt.Scanf("%f", &Height)
+	input(&Height)
 	fmt.Print("Degrees between points: ")
-	_, err := fmt.Scanf("%f", &Degrees)
+	input(&Degrees)
 	fmt.Print("Number of revolutions: ")
-	_, err := fmt.Scanf("%f", &Revolutions)
+	input(&Revolutions)
 	fmt.Print("Thinkness: ")
-	_, err := fmt.Scanf("%f", &Thinkness)
+	input(&Thinkness)
 	fmt.Print("Gap: ")
-	_, err := fmt.Scanf("%f", &Gap)
+	input(&Gap)
 }
