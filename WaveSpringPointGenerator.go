@@ -13,16 +13,21 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 type Vertex struct {
 	x, y, z float64
 }
 
+// User defined vars
 var InnerDiam, OuterDiam, Height float64
 var Degrees, Revolutions float64
 var Thinkness, Gap float64
 var Origin Vertex = Vertex{0, 0, 0}
+
+var Circumference float64
+var Angle float64
 
 func input(i *float64) {
 	_, err := fmt.Scanf("%f", i)
@@ -51,4 +56,8 @@ func main() {
 	input(&Thinkness)
 	fmt.Print("Gap: ")
 	input(&Gap)
+
+	Circumference = Pi * ((OuterDiam + InnerDiam) / 2.0)
+	Angle = math.Atan(Height / (Circumference * Revolutions))
+
 }
