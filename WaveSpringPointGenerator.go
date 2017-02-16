@@ -20,16 +20,18 @@ type Vertex struct {
 	x, y, z float64
 }
 
-// User inputted vars
+// User defined vars
 var InnerDiam, OuterDiam, Height float64
 var Degrees, Revolutions float64
 var Thinkness, Gap float64
 var Origin Vertex = Vertex{0, 0, 0}
 
 var Circumference float64
+var Slope float64
+var RevHeight float64
+var Amplitude float64
 
-// This function is to reduce repition during the user input proccess
-func input(i *float64) { // Variable references are passed in to the i pointer
+func input(i *float64) {
 	_, err := fmt.Scanf("%f", i)
 
 	if err != nil {
@@ -57,6 +59,8 @@ func main() {
 	fmt.Print("Gap: ")
 	input(&Gap)
 
-	Circumference = Pi * ((OuterDiam + InnerDiam)/2.0)
-	
+	Circumference = Pi * ((OuterDiam + InnerDiam) / 2.0)
+	Slope = Height / (Circumference * Revolutions)
+	RevHeight = Height / Revolutions
+	Amplitude = RevHeight / 2.0
 }
