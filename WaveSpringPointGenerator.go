@@ -27,7 +27,9 @@ var Thinkness, Gap float64
 var Origin Vertex = Vertex{0, 0, 0}
 
 var Circumference float64
-var Angle float64
+var Slope float64
+var RevHeight float64
+var Amplitude float64
 
 func input(i *float64) {
 	_, err := fmt.Scanf("%f", i)
@@ -58,6 +60,7 @@ func main() {
 	input(&Gap)
 
 	Circumference = Pi * ((OuterDiam + InnerDiam) / 2.0)
-	Angle = math.Atan(Height / (Circumference * Revolutions))
-
+	Slope = Height / (Circumference * Revolutions)
+	RevHeight = Height / Revolutions
+	Amplitude = RevHeight / 2.0
 }
