@@ -13,18 +13,23 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 type Vertex struct {
 	x, y, z float64
 }
 
+// User inputted vars
 var InnerDiam, OuterDiam, Height float64
 var Degrees, Revolutions float64
 var Thinkness, Gap float64
 var Origin Vertex = Vertex{0, 0, 0}
 
-func input(i *float64) {
+var Circumference float64
+
+// This function is to reduce repition during the user input proccess
+func input(i *float64) { // Variable references are passed in to the i pointer
 	_, err := fmt.Scanf("%f", i)
 
 	if err != nil {
@@ -51,4 +56,7 @@ func main() {
 	input(&Thinkness)
 	fmt.Print("Gap: ")
 	input(&Gap)
+
+	Circumference = Pi * ((OuterDiam + InnerDiam)/2.0)
+	
 }
