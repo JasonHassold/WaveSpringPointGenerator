@@ -59,7 +59,7 @@ func main() {
 	fmt.Print("Gap: ")
 	input(&Gap)
 
-	Circumference = Pi * ((OuterDiam + InnerDiam) / 2.0)
+	Circumference = math.Pi * ((OuterDiam + InnerDiam) / 2.0)
 	Slope = Height / (Circumference * Revolutions)
 	RevHeight = Height / Revolutions
 	Amplitude = RevHeight / 2.0
