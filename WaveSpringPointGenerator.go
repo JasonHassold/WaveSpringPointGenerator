@@ -22,7 +22,7 @@ type Vertex struct {
 
 // User defined vars
 var InnerDiam, OuterDiam, Height float64
-var Degrees, Revolutions float64
+var Degrees, Revolutions, Periods float64
 var Thinkness, Gap float64
 var Origin Vertex = Vertex{0, 0, 0}
 
@@ -30,6 +30,7 @@ var Circumference float64
 var Slope float64
 var RevHeight float64
 var Amplitude float64
+var Period float64
 
 func input(i *float64) {
 	_, err := fmt.Scanf("%f", i)
@@ -54,6 +55,8 @@ func main() {
 	input(&Degrees)
 	fmt.Print("Number of revolutions: ")
 	input(&Revolutions)
+	fmt.Print("Number of periods: ")
+	input(&Periods)
 	fmt.Print("Thinkness: ")
 	input(&Thinkness)
 	fmt.Print("Gap: ")
@@ -63,4 +66,6 @@ func main() {
 	Slope = Height / (Circumference * Revolutions)
 	RevHeight = Height / Revolutions
 	Amplitude = RevHeight / 2.0
+	Period = Circumference / Periods
+
 }
