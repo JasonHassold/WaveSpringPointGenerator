@@ -4,9 +4,10 @@
    -------------------------------------
    Written by Jason Hassold
 
-   This program creates an ASCII point file for a spring that is in the shape
-   of a spiral sine wave. The user enters in a series of conditions to change
-   things like the size, width, how many degrees between each point.
+   This program creates an .obj file containing the vertexes for a spring that
+   is in the shape of a spiral sine wave. The user enters in a series of
+   conditions to change things like the size, width, how many degrees between
+   each point.
 */
 
 package main
@@ -22,22 +23,24 @@ type Vertex struct {
 	x, y, z float64
 }
 
-// User defined vars
-var InnerDiam, OuterDiam, Height float64
+// Variables inputted by the user
+var InnerDiam, OuterDiam float64
+var Height, Thickness float64
+var Gap float64 // Gap between overlapping peak and trough
 var Degrees, Revolutions, Periods float64
-var Thickness, Gap float64
-var Origin Vertex = Vertex{0, 0, 0}
 
 var Circumference float64
 var Slope float64
-var RevHeight float64
-var Amplitude float64
-var MaxAmplitude float64
 var Period float64
+var RevHeight float64
+var MaxAmplitude float64
 var Center [2]float64
+var Amplitude float64
 
 var Spring []Vertex
+var NumOfPoints int
 
+// Parameter is the reference of a variable
 func input(i *float64) {
 	_, err := fmt.Scanf("%f", i)
 
@@ -46,6 +49,9 @@ func input(i *float64) {
 	}
 }
 
+/******************
+   Main Function
+******************/
 func main() {
 	fmt.Println("-------------------------------------")
 	fmt.Println("| Wave Wire Spring Points Generator |")
@@ -57,77 +63,82 @@ func main() {
 	input(&OuterDiam)
 	fmt.Print("Height: ")
 	input(&Height)
+	fmt.Print("Thickness: ")
+	input(&Thickness)
+	fmt.Print("Gap: ")
+	input(&Gap)
 	fmt.Print("Degrees between points: ")
 	input(&Degrees)
 	fmt.Print("Number of revolutions: ")
 	input(&Revolutions)
 	fmt.Print("Number of periods: ")
 	input(&Periods)
-	fmt.Print("Thickness: ")
-	input(&Thickness)
-	fmt.Print("Gap: ")
-	input(&Gap)
+	fmt.Print("")
 
+	// C = Pi * d
 	Circumference = math.Pi * ((OuterDiam + InnerDiam) / 2.0)
+	// m = h / (C * rev)
 	Slope = Height / (Circumference * Revolutions)
-	RevHeight = Height / Revolutions
-	MaxAmplitude = RevHeight / 2.0
+	// T = (2*Pi) / (C / #ofT)
 	Period = (2 * math.Pi) / (Circumference / Periods)
+	// h per rev = h / rev
+	RevHeight = Height / Revolutions
+	// MaxA = h per rev / 2
+	MaxAmplitude = RevHeight / 2.0
+	//
 	Center[0] = ((Circumference / Periods) * (.75)) * Slope
+	//
 	Center[1] = (Circumference + (Circumference/Periods)*(.75)) * Slope
+	//
 	Amplitude = (Center[1] - Center[0] - Thickness - Gap) / 2.0
 
 	refineAmp()
+
+	NumOfPoints = (360 / int(Degrees)) * int(Revolutions) * 2
+	Spring = make([]Vertex, NumOfPoints)
 	generate()
+
 	outputSpring()
 }
 
-func Sine(x float64) float64 {
+func SpringSine(x float64) float64 {
 	return Amplitude*math.Sin(Period*x-(3.0*math.Pi)/2.0) + Slope*x
 }
 
-// This function increases the accuracy of the amplitude by stepping.
+// This function increases the accuracy of the amplitude
 func refineAmp() {
-	count := 0
+	//fmt.Println("Amp: " + Amplitude)
 
-	for count < 5 {
-		//fmt.Println(Amplitude)
+	x1 := (math.Acos(-Slope/(Amplitude*Period)) + (3.0*math.Pi)/2.0) / Period
+	x2 := (math.Acos(Slope/(Amplitude*Period)) + (3.0*math.Pi)/2.0 + Circumference) / Period // Removing the - is because it is a min
+	z1 := SpringSine(x1)
+	z2 := SpringSine(x2)
 
-		x1 := (math.Acos(-Slope/(Amplitude*Period)) + (3.0*math.Pi)/2.0) / Period
-		x2 := (math.Acos(-Slope/(Amplitude*Period)) + (3.0*math.Pi)/2.0 + Circumference) / Period
-		y1 := Sine(x1)
-		y2 := Sine(x2)
+	deltaY := math.Abs(z2 - z1)
+	offset := (Thickness + Gap) - deltaY
+	Amplitude -= offset / 2.0
 
-		//fmt.Println(x1, x2)
-		//fmt.Println(y1, y2)
-
-		deltaY := math.Abs(y2 - y1)
-		offset := (Thickness + Gap) - deltaY
-		Amplitude -= offset / 2.0
-
-		//fmt.Println(deltaY)
-		//fmt.Println(offset)
-		//fmt.Println(Amplitude)
-		//fmt.Println()
-
-		count += 1
-	}
+	//fmt.Println("x: " + x1, x2)
+	//fmt.Println("y: " + y1, y2)
+	//fmt.Println("deltaY: " + deltaY)
+	//fmt.Println("offset: " + offset)
+	//fmt.Println("Amp: " + Amplitude)
+	//fmt.Println()
 }
 
 func generate() {
-	numOfPoints := (360 / Degrees) * Revolutions
-	radiansXY := (Degrees * math.Pi) / 180.0
-	radiansZ := (Degrees / 360.0) * Circumference
-	Spring = make([]Vertex, 2*int(numOfPoints))
+	radiansXY := (Degrees * math.Pi) / 180.0      // Standard 2pi circle
+	radiansZ := (Degrees / 360.0) * Circumference // Total sine wave length
 
-	for p := 0; p < 2*int(numOfPoints); p += 2 {
+	for p := 0; p < NumOfPoints; p += 2 {
+		// Inner Diameter
 		Spring[p].x = (InnerDiam / 2.0) * math.Cos(radiansXY*float64(p/2))
 		Spring[p].y = (InnerDiam / 2.0) * math.Sin(radiansXY*float64(p/2))
-		Spring[p].z = Sine(radiansZ * float64(p/2))
-
+		Spring[p].z = SpringSine(radiansZ * float64(p/2))
+		// Outer Diameter
 		Spring[p+1].x = (OuterDiam / 2.0) * math.Cos(radiansXY*float64(p/2))
 		Spring[p+1].y = (OuterDiam / 2.0) * math.Sin(radiansXY*float64(p/2))
-		Spring[p+1].z = Sine(radiansZ * float64(p/2))
+		Spring[p+1].z = SpringSine(radiansZ * float64(p/2))
 	}
 
 	//fmt.Println(Spring)
