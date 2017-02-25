@@ -155,14 +155,14 @@ func outputSpring() {
 	check(err)
 	defer file.Close()
 
-	_, err = file.WriteString("# List of vertexes in (x,y,z) form\n")
-	check(err)
+	//_, err = file.WriteString("# List of vertexes in (x,y,z) form\n")
+	//check(err)
 
 	for l := 0; l < len(Spring); l++ {
 		x := strconv.FormatFloat(Spring[l].x, 'f', 6, 64)
 		y := strconv.FormatFloat(Spring[l].y, 'f', 6, 64)
 		z := strconv.FormatFloat(Spring[l].z, 'f', 6, 64)
-		_, err = file.WriteString("v " + x + " " + y + " " + z + "\n")
+		_, err = file.WriteString(x + " " + y + " " + z + "\n")
 		check(err)
 	}
 
