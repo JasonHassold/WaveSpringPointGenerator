@@ -151,9 +151,13 @@ func check(e error) {
 }
 
 func outputSpring() {
-	file, err := os.Create("spring.obj")
+	file1, err := os.Create("springInner.txt")
 	check(err)
-	defer file.Close()
+	defer file1.Close()
+
+	file2, err := os.Create("springOuter.txt")
+	check(err)
+	defer file2.Close()
 
 	//_, err = file.WriteString("# List of vertexes in (x,y,z) form\n")
 	//check(err)
@@ -162,9 +166,16 @@ func outputSpring() {
 		x := strconv.FormatFloat(Spring[l].x, 'f', 6, 64)
 		y := strconv.FormatFloat(Spring[l].y, 'f', 6, 64)
 		z := strconv.FormatFloat(Spring[l].z, 'f', 6, 64)
-		_, err = file.WriteString(x + " " + y + " " + z + "\n")
+
+		if l%2 == 0 {
+			_, err = file1.WriteString(x + " " + y + " " + z + "\n")
+		} else {
+			_, err = file2.WriteString(x + " " + y + " " + z + "\n")
+		}
+
 		check(err)
 	}
 
-	file.Sync()
+	file1.Sync()
+	file2.Sync()
 }
