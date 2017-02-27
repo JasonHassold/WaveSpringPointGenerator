@@ -69,9 +69,9 @@ func main() {
 	input(&Gap)
 	fmt.Print("Degrees between points: ")
 	input(&Degrees)
-	fmt.Print("Number of revolutions: ")
+	fmt.Print("Number of revolutions (needs to be odd): ")
 	input(&Revolutions)
-	fmt.Print("Number of periods: ")
+	fmt.Print("Number of periods (*.5): ")
 	input(&Periods)
 	fmt.Print("")
 
