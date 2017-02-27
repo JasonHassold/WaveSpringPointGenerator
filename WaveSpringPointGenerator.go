@@ -42,7 +42,7 @@ var NumOfPoints int
 
 // Parameter is the reference of a variable
 func input(i *float64) {
-	_, err := fmt.Scanf("%f", i)
+	_, err := fmt.Scanf("%f\r\n", i)
 
 	if err != nil {
 		fmt.Println(err)
